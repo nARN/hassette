@@ -31,6 +31,8 @@ class FileWatcherService(Service):
         """Watch app directories for changes and trigger reloads."""
         if not self.hassette.config.file_watcher.watch_files:
             self.logger.warning("File watching is disabled due to configuration")
+            mark_ready(self, reason="File watching disabled")
+            await self.shutdown_event.wait()
             return
 
         paths = self.hassette.config.get_watchable_files()
